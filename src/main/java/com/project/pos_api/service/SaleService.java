@@ -51,7 +51,7 @@ public class SaleService {
         }
         sale.setItems(items);
         sale.setTotal(total);
-        var saved = saleRepository.save(sale);
+        Sale saved = saleRepository.save(sale);
         List<SaleResponse.Item> responseItems = saved.getItems().stream()
                 .map(i -> new SaleResponse.Item(i.getProduct().getId(), i.getProduct().getName(), i.getQuantity(), i.getPrice()))
                 .collect(Collectors.toList());

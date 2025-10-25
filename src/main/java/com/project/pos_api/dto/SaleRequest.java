@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-@Data
+@Data @AllArgsConstructor @NoArgsConstructor
 public class SaleRequest {
     private List<Item> items;
     private String paymentMethod;
