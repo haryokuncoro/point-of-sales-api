@@ -1,6 +1,7 @@
 package com.project.pos_api.controller;
 
 import com.project.pos_api.config.JwtTokenProvider;
+import com.project.pos_api.dto.LoginRequest;
 import com.project.pos_api.entity.User;
 import com.project.pos_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,9 @@ public class AuthController {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
+    public ResponseEntity<?> register(@RequestBody LoginRequest request) {
+        String username = request.getUsername();
+        String password = request.getPassword();
         if (userRepository.findByUsername(username).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "username_taken"));
         }
@@ -39,9 +40,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        String username = request.getUsername();
+        String password = request.getPassword();
         var userOpt = userRepository.findByUsername(username);
         if (userOpt.isEmpty()) return ResponseEntity.status(401).body(Map.of("error", "invalid_credentials"));
         User u = userOpt.get();
