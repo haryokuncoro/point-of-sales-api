@@ -53,7 +53,6 @@ public class ReportController {
             PDImageXObject pdImage = PDImageXObject.createFromByteArray(doc, png, "chart");
             PDType1Font font1 = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
             PDType1Font font2 = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
-
             try (PDPageContentStream cs = new PDPageContentStream(doc, page)) {
                 float scale = 0.5f;
                 float imgW = pdImage.getWidth() * scale;
