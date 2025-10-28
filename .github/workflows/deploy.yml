@@ -73,7 +73,7 @@ jobs:
                 \"logConfiguration\": {
                   \"logDriver\": \"awslogs\",
                   \"options\": {
-                    \"awslogs-group\": \"/ecs/spring-web-ecs\",
+                    \"awslogs-group\": \"/ecs/spring-web\",
                     \"awslogs-region\": \"${{ secrets.AWS_REGION }}\",
                     \"awslogs-stream-prefix\": \"ecs\"
                   }
