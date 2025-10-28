@@ -87,7 +87,7 @@ jobs:
                   {\"name\": \"RDS_PORT\", \"value\": \"3306\"},
                   {\"name\": \"RDS_DB\", \"value\": \"pos-api\"},
                   {\"name\": \"RDS_USERNAME\", \"value\": \"${{ secrets.RDS_USERNAME }}\"},
-                  {\"name\": \"RDS_PASSWORD\", \"value\": \"${{ secrets.RDS_PASSWORD }}\"}
+                  {\"name\": \"RDS_PASSWORD\", \"value\": \"${{ secrets.RDS_PASSWORD }}\"},
                   {\"name\": \"JAVA_OPTS\", \"value\": \"-Xms100m -Xmx150m\"}
                 ]
               }
