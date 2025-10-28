@@ -60,12 +60,15 @@ jobs:
             --family crud-app-task \
             --requires-compatibilities EC2 \
             --network-mode bridge \
-            --cpu 256 --memory 512 \
+            --cpu 256 --memory 200 \
             --execution-role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecsTaskExecutionRole \
             --container-definitions "[
               {
                 \"name\": \"spring-web-ecs\",
                 \"image\": \"$ECR_IMAGE\",
+                \"essential\": true,
+                \"memory\": 200,
+                \"cpu\": 256,
                 \"essential\": true,
                 \"portMappings\": [
                   {\"containerPort\": 8080, \"protocol\": \"tcp\"}
@@ -85,6 +88,7 @@ jobs:
                   {\"name\": \"RDS_DB\", \"value\": \"pos-api\"},
                   {\"name\": \"RDS_USERNAME\", \"value\": \"${{ secrets.RDS_USERNAME }}\"},
                   {\"name\": \"RDS_PASSWORD\", \"value\": \"${{ secrets.RDS_PASSWORD }}\"}
+                  {\"name\": \"JAVA_OPTS\", \"value\": \"-Xms100m -Xmx150m\"}
                 ]
               }
             ]"
