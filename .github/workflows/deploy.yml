@@ -57,14 +57,14 @@ jobs:
           ECR_IMAGE=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crud-app:$IMAGE_TAG
 
           aws ecs register-task-definition \
-            --family haryo-td \
+            --family hk \
             --requires-compatibilities EC2 \
             --network-mode bridge \
-            --cpu 256 --memory 200 \
+            --cpu 512 --memory 512 \
             --execution-role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecsTaskExecutionRole \
             --container-definitions "[
               {
-                \"name\": \"haryo\",
+                \"name\": \"hk\",
                 \"image\": \"$ECR_IMAGE\",
                 \"essential\": true,
                 \"memory\": 200,
@@ -76,7 +76,7 @@ jobs:
                 \"logConfiguration\": {
                   \"logDriver\": \"awslogs\",
                   \"options\": {
-                    \"awslogs-group\": \"/haryo-td\",
+                    \"awslogs-group\": \"/hk\",
                     \"awslogs-region\": \"${{ secrets.AWS_REGION }}\",
                     \"awslogs-stream-prefix\": \"ecs\"
                   }
@@ -99,7 +99,7 @@ jobs:
         run: |
           AWS_REGION=${{ secrets.AWS_REGION }}
           TASK_DEF_ARN=$(aws ecs list-task-definitions \
-            --family-prefix haryo-td \
+            --family-prefix hk \
             --sort DESC \
             --query 'taskDefinitionArns[0]' \
             --output text)
@@ -107,8 +107,8 @@ jobs:
           echo "Updating service web-app to use task definition: $TASK_DEF_ARN"
 
           aws ecs update-service \
-            --cluster haryo \
-            --service haryo-td-service \
+            --cluster hk \
+            --service hk-service \
             --task-definition $TASK_DEF_ARN \
             --force-new-deployment \
             --region $AWS_REGION
