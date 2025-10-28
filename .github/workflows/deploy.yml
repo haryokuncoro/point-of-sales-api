@@ -60,6 +60,7 @@ jobs:
             --family hk \
             --requires-compatibilities EC2 \
             --network-mode bridge \
+            --cpu 512 --memory 1024 \
             --execution-role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecsTaskExecutionRole \
             --container-definitions "[
               {
