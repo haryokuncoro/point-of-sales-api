@@ -60,15 +60,11 @@ jobs:
             --family hk \
             --requires-compatibilities EC2 \
             --network-mode bridge \
-            --cpu 512 --memory 512 \
             --execution-role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecsTaskExecutionRole \
             --container-definitions "[
               {
                 \"name\": \"hk\",
                 \"image\": \"$ECR_IMAGE\",
-                \"essential\": true,
-                \"memory\": 200,
-                \"cpu\": 256,
                 \"essential\": true,
                 \"portMappings\": [
                   {\"containerPort\": 8080, \"protocol\": \"tcp\"}
@@ -87,8 +83,7 @@ jobs:
                   {\"name\": \"RDS_PORT\", \"value\": \"3306\"},
                   {\"name\": \"RDS_DB\", \"value\": \"pos-api\"},
                   {\"name\": \"RDS_USERNAME\", \"value\": \"${{ secrets.RDS_USERNAME }}\"},
-                  {\"name\": \"RDS_PASSWORD\", \"value\": \"${{ secrets.RDS_PASSWORD }}\"},
-                  {\"name\": \"JAVA_OPTS\", \"value\": \"-Xms100m -Xmx150m\"}
+                  {\"name\": \"RDS_PASSWORD\", \"value\": \"${{ secrets.RDS_PASSWORD }}\"}
                 ]
               }
             ]"
