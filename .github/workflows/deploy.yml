@@ -64,7 +64,7 @@ jobs:
             --execution-role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecsTaskExecutionRole \
             --container-definitions "[
               {
-                \"name\": \"crud-app\",
+                \"name\": \"spring-web-ecs\",
                 \"image\": \"$ECR_IMAGE\",
                 \"essential\": true,
                 \"portMappings\": [
@@ -73,7 +73,7 @@ jobs:
                 \"logConfiguration\": {
                   \"logDriver\": \"awslogs\",
                   \"options\": {
-                    \"awslogs-group\": \"/ecs/crud-app\",
+                    \"awslogs-group\": \"/ecs/spring-web-ecs\",
                     \"awslogs-region\": \"${{ secrets.AWS_REGION }}\",
                     \"awslogs-stream-prefix\": \"ecs\"
                   }
@@ -103,8 +103,8 @@ jobs:
           echo "Updating service web-app to use task definition: $TASK_DEF_ARN"
 
           aws ecs update-service \
-            --cluster crud-app \
-            --service web-app-service-u63fgyig \
+            --cluster spring-web-ecs \
+            --service crud-app-task-service \
             --task-definition $TASK_DEF_ARN \
             --force-new-deployment \
             --region $AWS_REGION
