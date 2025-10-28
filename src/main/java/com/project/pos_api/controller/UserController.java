@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/user")
@@ -17,9 +19,14 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping("/{id}")
-    public User update(@PathVariable Long id) {
+    public User findById(@PathVariable Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    @GetMapping("/")
+    public List<User> findAll(@PathVariable Long id) {
+        return userRepository.findAll();
     }
 
 
