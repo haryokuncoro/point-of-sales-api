@@ -1,0 +1,55 @@
+name: Deploy Spring Boot (Gradle) to Elastic Beanstalk
+
+on:
+  push:
+    tags:
+      - 'staging-*'
+      - 'prod-*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Determine environment
+        id: envdetect
+        run: |
+          if [[ $GITHUB_REF_NAME == prod-* ]]; then
+            echo "env=prod" >> $GITHUB_OUTPUT
+            echo "beanstalk_env=${{ secrets.EB_ENV_PROD }}" >> $GITHUB_OUTPUT
+          else
+            echo "env=staging" >> $GITHUB_OUTPUT
+            echo "beanstalk_env=${{ secrets.EB_ENV_STAGING }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x gradlew
+
+      - name: Build JAR with Gradle
+        run: ./gradlew clean bootJar -Pprofile=${{ steps.envdetect.outputs.env }}
+
+      - name: Prepare deployment package
+        run: |
+          mkdir -p deploy
+          cp build/libs/app.jar deploy/application.jar
+          cd deploy && zip -r ../app.zip .
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.EB_APP_NAME }}
+          environment_name: ${{ steps.envdetect.outputs.beanstalk_env }}
+          region: ${{ secrets.AWS_REGION }}
+          version_label: ${{ github.ref_name }}
+          deployment_package: app.zip
